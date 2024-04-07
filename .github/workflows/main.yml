@@ -1,0 +1,27 @@
+name: Devpass checks
+
+on:
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Go 1.21.x
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.x'
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Download test file
+        run: curl -0 https://devpass-api-bucket.s3.amazonaws.com/testes/CloudoorHelloTests/hello_test.go -o hello_test.go
+
+      - name: Run unit tests
+        run: go test
